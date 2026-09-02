@@ -101,7 +101,11 @@ function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-6 sm:py-10">
+    <div
+      className={`min-h-screen bg-background px-4 py-6 sm:py-10 ${
+        palettes.find((p) => p.id === palette)?.className ?? ""
+      }`}
+    >
       <div className="mx-auto w-full max-w-4xl">
         {/* Header */}
         <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
