@@ -92,9 +92,11 @@ function Index() {
 
   const handleReset = () => {
     setValues(defaultValues);
+    setRaw({});
     setErrors({});
     setResult(null);
   };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8 sm:py-12">
