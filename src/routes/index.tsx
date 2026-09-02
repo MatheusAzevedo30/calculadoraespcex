@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Target, RotateCcw, Calculator, Palette } from "lucide-react";
+import { Target, RotateCcw, Calculator } from "lucide-react";
 
 import brasaoAsset from "@/assets/brasao.png.asset.json";
 import { Button } from "@/components/ui/button";
