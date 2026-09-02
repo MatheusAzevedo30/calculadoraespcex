@@ -139,7 +139,7 @@ function Index() {
               {subjects.map((subject) => (
                 <div
                   key={subject.key}
-                  className="rounded-lg border border-border/60 bg-card p-4 transition-colors focus-within:border-ring/50 focus-within:ring-1 focus-within:ring-ring/30"
+                  className="group rounded-xl border border-border/60 bg-card p-4 shadow-[var(--shadow-soft)] transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 focus-within:border-ring/60 focus-within:ring-2 focus-within:ring-ring/25"
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <Label htmlFor={subject.key} className="font-semibold text-foreground">
