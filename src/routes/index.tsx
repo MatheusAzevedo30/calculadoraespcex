@@ -183,7 +183,11 @@ function Index() {
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <Button type="submit" className="flex-1 gap-2">
+                  <Button
+                    type="button"
+                    onClick={() => form.handleSubmit(onSubmit)()}
+                    className="flex-1 gap-2"
+                  >
                     <Calculator className="h-4 w-4" />
                     Calcular média
                   </Button>
