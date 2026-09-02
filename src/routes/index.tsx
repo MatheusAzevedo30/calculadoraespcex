@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Calculator, RotateCcw, GraduationCap, BookOpen } from "lucide-react";
+import { Target, Crosshair, RotateCcw, Calculator } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -14,17 +14,17 @@ import type { CalculatorInput } from "@/lib/calculator.schema";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Calculadora de Média de Concurso" },
+      { title: "Tiro Certo EsPCEx" },
       {
         name: "description",
         content:
-          "Calcule a média final de candidatos em concursos com base nos acertos por disciplina e na redação opcional.",
+          "Calcule sua média final para o concurso EsPCEx com base nos acertos por disciplina e na redação opcional.",
       },
-      { property: "og:title", content: "Calculadora de Média de Concurso" },
+      { property: "og:title", content: "Tiro Certo EsPCEx" },
       {
         property: "og:description",
         content:
-          "Calcule a média final de candidatos em concursos com base nos acertos por disciplina e na redação opcional.",
+          "Calcule sua média final para o concurso EsPCEx com base nos acertos por disciplina e na redação opcional.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -45,6 +45,10 @@ const defaultValues: CalculatorInput = {
   essay: null,
 };
 
+function formatWeight(weight: number): string {
+  return Number.isInteger(weight) ? String(weight) : weight.toString().replace(".", ",");
+}
+
 function Index() {
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
@@ -56,21 +60,6 @@ function Index() {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
-
-  const isValid = useMemo(() => {
-    const parsed = calculatorSchema.safeParse(values);
-    if (!parsed.success) {
-      const fieldErrors: Partial<Record<keyof CalculatorInput, string>> = {};
-      parsed.error.errors.forEach((err) => {
-        const path = err.path[0] as keyof CalculatorInput;
-        fieldErrors[path] = err.message;
-      });
-      setErrors(fieldErrors);
-      return false;
-    }
-    setErrors({});
-    return true;
-  }, [values]);
 
   const handleCalculate = () => {
     const parsed = calculatorSchema.safeParse(values);
@@ -94,135 +83,164 @@ function Index() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4 py-12">
-      <div className="w-full max-w-3xl">
-        <div className="mb-6 text-center">
-          <div className="mb-3 inline-flex items-center justify-center rounded-full bg-primary/10 p-3">
-            <GraduationCap className="h-8 w-8 text-primary" />
+    <div className="min-h-screen bg-background px-4 py-6 sm:py-10">
+      <div className="mx-auto w-full max-w-4xl">
+        {/* Header */}
+        <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+              <Crosshair className="h-7 w-7" strokeWidth={2} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Tiro Certo EsPCEx
+              </h1>
+              <p className="text-sm font-medium text-muted-foreground">
+                Calcule sua média EsPCEx
+              </p>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Calculadora de Média
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Preencha os acertos por disciplina para calcular a média final do concurso.
-          </p>
-        </div>
+        </header>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl">
-              <BookOpen className="h-5 w-5" />
-              Dados do candidato
+        {/* Form Card */}
+        <Card className="border-2 border-border/50 shadow-sm">
+          <CardHeader className="border-b border-border/50 bg-secondary/30">
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+              <Target className="h-5 w-5 text-accent" />
+              Notas por disciplina
             </CardTitle>
-            <CardDescription>
-              Os valores são convertidos automaticamente para uma base de 100 pontos.
-            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-8">
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {subjects.map((subject) => (
-                  <div key={subject.key} className="space-y-2">
-                    <Label htmlFor={subject.key}>{subject.label}</Label>
-                    <Input
-                      id={subject.key}
-                      type="number"
-                      min={0}
-                      max={subject.maxScore}
-                      inputMode="numeric"
-                      placeholder="0"
-                      value={values[subject.key]}
-                      onChange={(e) =>
-                        handleChange(
-                          subject.key,
-                          e.target.value === "" ? 0 : e.target.valueAsNumber,
-                        )
-                      }
-                    />
-                    {errors[subject.key] && (
-                      <p className="text-xs font-medium text-destructive">{errors[subject.key]}</p>
-                    )}
-                    <p className="text-xs text-muted-foreground">
-                      0 a {subject.maxScore} questões
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-lg border bg-card p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="essay-toggle" className="text-base font-medium">
-                      Incluir redação
+          <CardContent className="space-y-8 pt-6">
+            {/* Subject grid */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {subjects.map((subject) => (
+                <div
+                  key={subject.key}
+                  className="rounded-lg border border-border/60 bg-card p-4 transition-colors focus-within:border-ring/50 focus-within:ring-1 focus-within:ring-ring/30"
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <Label htmlFor={subject.key} className="font-semibold text-foreground">
+                      {subject.label}
                     </Label>
-                    <p className="text-sm text-muted-foreground">
-                      Ative para informar a nota da redação (0 a 100).
-                    </p>
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                      Peso {formatWeight(subject.weight)}
+                    </span>
                   </div>
-                  <Switch
-                    id="essay-toggle"
-                    checked={values.includeEssay}
-                    onCheckedChange={(checked) => handleChange("includeEssay", checked)}
+                  <Input
+                    id={subject.key}
+                    type="number"
+                    min={0}
+                    max={subject.maxScore}
+                    inputMode="numeric"
+                    placeholder="0"
+                    value={values[subject.key]}
+                    onChange={(e) =>
+                      handleChange(
+                        subject.key,
+                        e.target.value === "" ? 0 : e.target.valueAsNumber,
+                      )
+                    }
+                    className="h-11 text-center text-lg font-semibold tabular-nums"
                   />
+                  {errors[subject.key] && (
+                    <p className="mt-2 text-xs font-medium text-destructive">
+                      {errors[subject.key]}
+                    </p>
+                  )}
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    0 a {subject.maxScore} questões (contribuição máxima: 100 pts)
+                  </p>
                 </div>
-
-                {values.includeEssay && (
-                  <div className="mt-4">
-                    <Label htmlFor="essay">Nota da redação</Label>
-                    <Input
-                      id="essay"
-                      type="number"
-                      min={0}
-                      max={100}
-                      step={0.01}
-                      inputMode="decimal"
-                      placeholder="0"
-                      value={values.essay ?? ""}
-                      onChange={(e) =>
-                        handleChange(
-                          "essay",
-                          e.target.value === "" ? null : e.target.valueAsNumber,
-                        )
-                      }
-                      className="mt-2"
-                    />
-                    {errors.essay && (
-                      <p className="mt-2 text-xs font-medium text-destructive">{errors.essay}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button type="button" onClick={handleCalculate} className="flex-1 gap-2">
-                  <Calculator className="h-4 w-4" />
-                  Calcular média
-                </Button>
-                <Button type="button" variant="outline" onClick={handleReset} className="gap-2">
-                  <RotateCcw className="h-4 w-4" />
-                  Limpar
-                </Button>
-              </div>
+              ))}
             </div>
 
-            {result !== null && (
-              <div className="mt-8 rounded-xl border bg-primary/5 p-6 text-center transition-all">
-                <p className="text-sm font-medium text-muted-foreground">Resultado</p>
-                <p className="mt-1 text-5xl font-bold tracking-tight text-foreground">
-                  {result.value.toFixed(2)}
-                </p>
-                <p className="mt-2 text-lg font-semibold text-primary">{result.type}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {result.type === "NPEI"
-                    ? "Média sem redação"
-                    : "Média final incluindo redação"}
-                </p>
+            {/* Essay toggle */}
+            <div className="rounded-lg border border-border/60 bg-card p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="essay-toggle" className="text-base font-semibold text-foreground">
+                    Incluir redação
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Ative para informar a nota da redação (0 a 100). Peso 1.
+                  </p>
+                </div>
+                <Switch
+                  id="essay-toggle"
+                  checked={values.includeEssay}
+                  onCheckedChange={(checked) => handleChange("includeEssay", checked)}
+                />
               </div>
-            )}
+
+              {values.includeEssay && (
+                <div className="mt-4">
+                  <Label htmlFor="essay">Nota da redação</Label>
+                  <Input
+                    id="essay"
+                    type="number"
+                    min={0}
+                    max={100}
+                    step={0.01}
+                    inputMode="decimal"
+                    placeholder="0"
+                    value={values.essay ?? ""}
+                    onChange={(e) =>
+                      handleChange(
+                        "essay",
+                        e.target.value === "" ? null : e.target.valueAsNumber,
+                      )
+                    }
+                    className="mt-2 h-11 text-lg font-semibold tabular-nums"
+                  />
+                  {errors.essay && (
+                    <p className="mt-2 text-xs font-medium text-destructive">{errors.essay}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button
+                type="button"
+                onClick={handleCalculate}
+                className="h-12 flex-1 gap-2 bg-accent text-lg font-bold text-accent-foreground hover:bg-accent/90"
+              >
+                <Calculator className="h-5 w-5" />
+                Calcular média
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleReset}
+                className="h-12 gap-2 text-base font-semibold"
+              >
+                <RotateCcw className="h-5 w-5" />
+                Limpar
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
+        {/* Result */}
+        {result !== null && (
+          <div className="mt-6 rounded-xl border-2 border-accent/40 bg-card p-6 text-center shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Resultado final
+            </p>
+            <p className="mt-2 text-6xl font-extrabold tracking-tight text-foreground tabular-nums">
+              {result.value.toFixed(2)}
+            </p>
+            <p className="mt-2 text-2xl font-bold text-accent">{result.type}</p>
+            <p className="mt-1 text-sm font-medium text-muted-foreground">
+              {result.type === "NPEI"
+                ? "Média final sem redação"
+                : "Média final incluindo redação"}
+            </p>
+          </div>
+        )}
+
+        <p className="mt-6 text-center text-xs font-medium text-muted-foreground">
           As notas são convertidas para base 100 e aplicadas conforme os pesos do edital.
         </p>
       </div>
