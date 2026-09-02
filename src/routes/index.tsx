@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
 import { Calculator, RotateCcw, GraduationCap, BookOpen } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,16 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { calculateResult, subjects } from "@/lib/calculator";
-import { calculatorSchema, type CalculatorInput } from "@/lib/calculator.schema";
+import { calculatorSchema } from "@/lib/calculator.schema";
+import type { CalculatorInput } from "@/lib/calculator.schema";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -55,24 +46,52 @@ const defaultValues: CalculatorInput = {
 };
 
 function Index() {
+  const [values, setValues] = useState<CalculatorInput>(defaultValues);
+  const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
 
-  const form = useForm<CalculatorInput>({
-    resolver: zodResolver(calculatorSchema),
-    defaultValues,
-  });
+  const handleChange = (field: keyof CalculatorInput, value: number | boolean | null) => {
+    setValues((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    }
+  };
 
-  const includeEssay = useWatch({ control: form.control, name: "includeEssay" });
+  const isValid = useMemo(() => {
+    const parsed = calculatorSchema.safeParse(values);
+    if (!parsed.success) {
+      const fieldErrors: Partial<Record<keyof CalculatorInput, string>> = {};
+      parsed.error.errors.forEach((err) => {
+        const path = err.path[0] as keyof CalculatorInput;
+        fieldErrors[path] = err.message;
+      });
+      setErrors(fieldErrors);
+      return false;
+    }
+    setErrors({});
+    return true;
+  }, [values]);
 
-  function onSubmit(data: CalculatorInput) {
-    console.log("form submitted", data);
-    setResult(calculateResult(data));
-  }
+  const handleCalculate = () => {
+    const parsed = calculatorSchema.safeParse(values);
+    if (!parsed.success) {
+      const fieldErrors: Partial<Record<keyof CalculatorInput, string>> = {};
+      parsed.error.errors.forEach((err) => {
+        const path = err.path[0] as keyof CalculatorInput;
+        fieldErrors[path] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+    setResult(calculateResult(parsed.data));
+  };
 
-  function onReset() {
-    form.reset(defaultValues);
+  const handleReset = () => {
+    setValues(defaultValues);
+    setErrors({});
     setResult(null);
-  }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 px-4 py-12">
@@ -100,109 +119,91 @@ function Index() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {subjects.map((subject) => (
-                    <FormField
-                      key={subject.key}
-                      control={form.control}
-                      name={subject.key}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{subject.label}</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              min={0}
-                              max={subject.maxScore}
-                              inputMode="numeric"
-                              placeholder="0"
-                              {...field}
-                              onChange={(e) => field.onChange(e.target.valueAsNumber)}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                          <p className="text-xs text-muted-foreground">
-                            0 a {subject.maxScore} questões
-                          </p>
-                        </FormItem>
-                      )}
+            <div className="space-y-8">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {subjects.map((subject) => (
+                  <div key={subject.key} className="space-y-2">
+                    <Label htmlFor={subject.key}>{subject.label}</Label>
+                    <Input
+                      id={subject.key}
+                      type="number"
+                      min={0}
+                      max={subject.maxScore}
+                      inputMode="numeric"
+                      placeholder="0"
+                      value={values[subject.key]}
+                      onChange={(e) =>
+                        handleChange(
+                          subject.key,
+                          e.target.value === "" ? 0 : e.target.valueAsNumber,
+                        )
+                      }
                     />
-                  ))}
-                </div>
-
-                <div className="rounded-lg border bg-card p-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="space-y-1">
-                      <Label htmlFor="essay-toggle" className="text-base font-medium">
-                        Incluir redação
-                      </Label>
-                      <p className="text-sm text-muted-foreground">
-                        Ative para informar a nota da redação (0 a 100).
-                      </p>
-                    </div>
-                    <Switch
-                      id="essay-toggle"
-                      checked={includeEssay}
-                      onCheckedChange={(checked) => form.setValue("includeEssay", checked)}
-                    />
+                    {errors[subject.key] && (
+                      <p className="text-xs font-medium text-destructive">{errors[subject.key]}</p>
+                    )}
+                    <p className="text-xs text-muted-foreground">
+                      0 a {subject.maxScore} questões
+                    </p>
                   </div>
+                ))}
+              </div>
 
-                  {includeEssay && (
-                    <div className="mt-4">
-                      <FormField
-                        control={form.control}
-                        name="essay"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nota da redação</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="number"
-                                min={0}
-                                max={100}
-                                step={0.01}
-                                inputMode="decimal"
-                                placeholder="0"
-                                {...field}
-                                value={field.value ?? ""}
-                                onChange={(e) =>
-                                  field.onChange(
-                                    e.target.value === "" ? null : e.target.valueAsNumber,
-                                  )
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  )}
+              <div className="rounded-lg border bg-card p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <Label htmlFor="essay-toggle" className="text-base font-medium">
+                      Incluir redação
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Ative para informar a nota da redação (0 a 100).
+                    </p>
+                  </div>
+                  <Switch
+                    id="essay-toggle"
+                    checked={values.includeEssay}
+                    onCheckedChange={(checked) => handleChange("includeEssay", checked)}
+                  />
                 </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <Button
-                    type="button"
-                    onClick={() => form.handleSubmit(onSubmit)()}
-                    className="flex-1 gap-2"
-                  >
-                    <Calculator className="h-4 w-4" />
-                    Calcular média
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={onReset}
-                    className="gap-2"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Limpar
-                  </Button>
-                </div>
-              </form>
-            </Form>
+                {values.includeEssay && (
+                  <div className="mt-4">
+                    <Label htmlFor="essay">Nota da redação</Label>
+                    <Input
+                      id="essay"
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={0.01}
+                      inputMode="decimal"
+                      placeholder="0"
+                      value={values.essay ?? ""}
+                      onChange={(e) =>
+                        handleChange(
+                          "essay",
+                          e.target.value === "" ? null : e.target.valueAsNumber,
+                        )
+                      }
+                      className="mt-2"
+                    />
+                    {errors.essay && (
+                      <p className="mt-2 text-xs font-medium text-destructive">{errors.essay}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button type="button" onClick={handleCalculate} className="flex-1 gap-2">
+                  <Calculator className="h-4 w-4" />
+                  Calcular média
+                </Button>
+                <Button type="button" variant="outline" onClick={handleReset} className="gap-2">
+                  <RotateCcw className="h-4 w-4" />
+                  Limpar
+                </Button>
+              </div>
+            </div>
 
             {result && (
               <div className="mt-8 rounded-xl border bg-primary/5 p-6 text-center transition-all">
