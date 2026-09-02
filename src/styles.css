@@ -77,6 +77,35 @@
   --ring: var(--gold);
 }
 
+.olive {
+  --military-green: oklch(0.45 0.07 125);
+  --military-green-dark: oklch(0.28 0.05 128);
+  --sand: oklch(0.78 0.05 115);
+  --sand-light: oklch(0.9 0.04 118);
+  --gold: oklch(0.7 0.14 95);
+  --gold-muted: oklch(0.78 0.1 95);
+  --off-white: oklch(0.975 0.015 115);
+  --khaki: oklch(0.7 0.06 115);
+
+  --background: var(--sand-light);
+  --foreground: var(--military-green-dark);
+  --card: var(--off-white);
+  --card-foreground: var(--military-green-dark);
+  --popover: var(--off-white);
+  --popover-foreground: var(--military-green-dark);
+  --primary: var(--military-green);
+  --primary-foreground: var(--off-white);
+  --secondary: var(--sand);
+  --secondary-foreground: var(--military-green-dark);
+  --muted: var(--sand);
+  --muted-foreground: oklch(0.46 0.04 118);
+  --accent: var(--gold);
+  --accent-foreground: var(--military-green-dark);
+  --border: oklch(0.5 0.06 120 / 28%);
+  --input: var(--off-white);
+  --ring: var(--gold);
+}
+
 .dark {
   --background: var(--military-green-dark);
   --foreground: var(--sand-light);

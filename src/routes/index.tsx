@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Target, RotateCcw, Calculator } from "lucide-react";
+import { Target, RotateCcw, Calculator, Palette } from "lucide-react";
 
 import brasaoAsset from "@/assets/brasao.png.asset.json";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { calculateResult, subjects } from "@/lib/calculator";
+import { calculateResult, convertToHundred, subjects } from "@/lib/calculator";
 import { calculatorSchema } from "@/lib/calculator.schema";
 import type { CalculatorInput } from "@/lib/calculator.schema";
 
@@ -51,7 +51,23 @@ function formatWeight(weight: number): string {
   return Number.isInteger(weight) ? String(weight) : weight.toString().replace(".", ",");
 }
 
+const subjectCodes: Record<string, string> = {
+  portuguese: "NP",
+  mathematics: "NM",
+  physics: "NF",
+  chemistry: "NQ",
+  history: "NH",
+  geography: "NG",
+  english: "NI",
+};
+
+const palettes = [
+  { id: "areia", label: "Areia", className: "" },
+  { id: "oliva", label: "Verde-oliva", className: "olive" },
+] as const;
+
 function Index() {
+  const [palette, setPalette] = useState<(typeof palettes)[number]["id"]>("areia");
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
@@ -85,7 +101,11 @@ function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-4 py-6 sm:py-10">
+    <div
+      className={`min-h-screen bg-background px-4 py-6 sm:py-10 ${
+        palettes.find((p) => p.id === palette)?.className ?? ""
+      }`}
+    >
       <div className="mx-auto w-full max-w-4xl">
         {/* Header */}
         <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
@@ -106,6 +126,23 @@ function Index() {
                 Calcule sua média EsPCEx
               </p>
             </div>
+          </div>
+          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-card p-1">
+            <Palette className="ml-2 h-4 w-4 text-muted-foreground" />
+            {palettes.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setPalette(p.id)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                  palette === p.id
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
           </div>
         </header>
 
@@ -154,9 +191,15 @@ function Index() {
                       {errors[subject.key]}
                     </p>
                   )}
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    0 a {subject.maxScore} questões (contribuição máxima: 100 pts)
-                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">0 a {subject.maxScore} questões</span>
+                    <span className="font-bold tabular-nums text-primary">
+                      {subjectCodes[subject.key]}{" "}
+                      {Number.isFinite(values[subject.key] as number)
+                        ? convertToHundred(Number(values[subject.key]) || 0, subject.key).toFixed(2)
+                        : "0.00"}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
