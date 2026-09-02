@@ -253,15 +253,17 @@ function Index() {
 
         {/* Result */}
         {result !== null && (
-          <div className="mt-6 rounded-xl border-2 border-accent/40 bg-card p-6 text-center shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="mt-6 rounded-2xl border border-accent/30 bg-[image:var(--gradient-panel)] p-8 text-center shadow-[var(--shadow-elevated)]">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-muted-foreground">
               Resultado final
             </p>
-            <p className="mt-2 text-6xl font-extrabold tracking-tight text-foreground tabular-nums">
+            <p className="mt-3 text-6xl font-black tracking-tight text-foreground tabular-nums sm:text-7xl">
               {result.value.toFixed(2)}
             </p>
-            <p className="mt-2 text-2xl font-bold text-accent">{result.type}</p>
-            <p className="mt-1 text-sm font-medium text-muted-foreground">
+            <span className="mt-3 inline-block rounded-full bg-accent/20 px-4 py-1 text-lg font-bold tracking-wide text-foreground">
+              {result.type}
+            </span>
+            <p className="mt-2 text-sm font-medium text-muted-foreground">
               {result.type === "NPEI"
                 ? "Média final sem redação"
                 : "Média final incluindo redação"}
