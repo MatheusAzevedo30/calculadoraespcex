@@ -51,7 +51,23 @@ function formatWeight(weight: number): string {
   return Number.isInteger(weight) ? String(weight) : weight.toString().replace(".", ",");
 }
 
+const subjectCodes: Record<string, string> = {
+  portuguese: "NP",
+  mathematics: "NM",
+  physics: "NF",
+  chemistry: "NQ",
+  history: "NH",
+  geography: "NG",
+  english: "NI",
+};
+
+const palettes = [
+  { id: "areia", label: "Areia", className: "" },
+  { id: "oliva", label: "Verde-oliva", className: "olive" },
+] as const;
+
 function Index() {
+  const [palette, setPalette] = useState<(typeof palettes)[number]["id"]>("areia");
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
