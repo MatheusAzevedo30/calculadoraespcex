@@ -20,7 +20,7 @@ export const calculatorSchema = z.object({
   history: z.coerce.number().int().min(0, "Mínimo 0").max(12, "Máximo 12"),
   geography: z.coerce.number().int().min(0, "Mínimo 0").max(12, "Máximo 12"),
   english: z.coerce.number().int().min(0, "Mínimo 0").max(12, "Máximo 12"),
-  includeEssay: z.boolean().default(false),
+  includeEssay: z.boolean().optional(),
   essay: z.coerce
     .number()
     .min(0, "Mínimo 0")
@@ -29,7 +29,17 @@ export const calculatorSchema = z.object({
     .nullable(),
 });
 
-export type CalculatorInput = z.infer<typeof calculatorSchema>;
+export type CalculatorInput = {
+  portuguese: number;
+  mathematics: number;
+  physics: number;
+  chemistry: number;
+  history: number;
+  geography: number;
+  english: number;
+  includeEssay: boolean;
+  essay: number | null | undefined;
+};
 
 export const calculatorResultSchema = z.object({
   type: z.enum(["NPEI", "NFEI"]),
