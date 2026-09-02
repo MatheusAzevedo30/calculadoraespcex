@@ -47,14 +47,14 @@
 :root {
   --radius: 0.5rem;
 
-  --military-green: oklch(0.395 0.031 112.59);
-  --military-green-dark: oklch(0.32 0.025 112.59);
-  --sand: oklch(0.836 0.064 40.337);
-  --sand-light: oklch(0.901 0.052 37.388);
-  --gold: oklch(0.653 0.117 44.736);
-  --gold-muted: oklch(0.731 0.095 46.062);
-  --off-white: oklch(0.972 0.033 33.619);
-  --khaki: oklch(0.572 0.062 38.32);
+  --military-green: oklch(0.42 0.035 120);
+  --military-green-dark: oklch(0.3 0.03 120);
+  --sand: oklch(0.8 0.04 85);
+  --sand-light: oklch(0.92 0.025 85);
+  --gold: oklch(0.65 0.13 80);
+  --gold-muted: oklch(0.73 0.11 80);
+  --off-white: oklch(0.985 0.01 85);
+  --khaki: oklch(0.72 0.04 85);
 
   --background: var(--sand-light);
   --foreground: var(--military-green-dark);
@@ -67,12 +67,12 @@
   --secondary: var(--sand);
   --secondary-foreground: var(--military-green-dark);
   --muted: var(--sand);
-  --muted-foreground: oklch(0.52 0.05 40);
+  --muted-foreground: oklch(0.5 0.03 85);
   --accent: var(--gold);
-  --accent-foreground: var(--off-white);
+  --accent-foreground: var(--military-green-dark);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.72 0.05 40 / 25%);
+  --border: oklch(0.72 0.04 85 / 30%);
   --input: var(--off-white);
   --ring: var(--gold);
 }
