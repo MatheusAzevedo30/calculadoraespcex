@@ -163,7 +163,7 @@ function Index() {
                         e.target.value === "" ? 0 : e.target.valueAsNumber,
                       )
                     }
-                    className="h-11 text-center text-lg font-semibold tabular-nums"
+                    className="h-12 rounded-lg border-border/60 bg-secondary/20 text-center text-xl font-bold tabular-nums"
                   />
                   {errors[subject.key] && (
                     <p className="mt-2 text-xs font-medium text-destructive">
