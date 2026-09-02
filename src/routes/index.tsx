@@ -90,9 +90,14 @@ function Index() {
         {/* Header */}
         <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-              <Crosshair className="h-7 w-7" strokeWidth={2} />
-            </div>
+            <img
+              src={brasaoAsset.url}
+              alt="Brasão EsPCEx"
+              className="h-16 w-auto drop-shadow-sm"
+              width={64}
+              height={64}
+              loading="eager"
+            />
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 Tiro Certo EsPCEx
