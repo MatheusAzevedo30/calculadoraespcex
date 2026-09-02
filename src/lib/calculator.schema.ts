@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export const subjects = [
-  { key: "portuguese", label: "Português", maxScore: 20 },
-  { key: "mathematics", label: "Matemática", maxScore: 20 },
-  { key: "physics", label: "Física", maxScore: 12 },
-  { key: "chemistry", label: "Química", maxScore: 12 },
-  { key: "history", label: "História", maxScore: 12 },
-  { key: "geography", label: "Geografia", maxScore: 12 },
-  { key: "english", label: "Inglês", maxScore: 12 },
+  { key: "portuguese", label: "Português", maxScore: 20, weight: 2 },
+  { key: "mathematics", label: "Matemática", maxScore: 20, weight: 2 },
+  { key: "physics", label: "Física", maxScore: 12, weight: 1.5 },
+  { key: "chemistry", label: "Química", maxScore: 12, weight: 1 },
+  { key: "history", label: "História", maxScore: 12, weight: 1 },
+  { key: "geography", label: "Geografia", maxScore: 12, weight: 1 },
+  { key: "english", label: "Inglês", maxScore: 12, weight: 1.5 },
 ] as const;
 
 export type SubjectKey = (typeof subjects)[number]["key"];
