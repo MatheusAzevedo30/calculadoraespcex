@@ -63,6 +63,7 @@ const subjectCodes: Record<string, string> = {
 
 function Index() {
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
+  const [raw, setRaw] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
 
@@ -72,6 +73,7 @@ function Index() {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
+
 
   const handleCalculate = () => {
     const parsed = calculatorSchema.safeParse(values);
@@ -90,9 +92,11 @@ function Index() {
 
   const handleReset = () => {
     setValues(defaultValues);
+    setRaw({});
     setErrors({});
     setResult(null);
   };
+
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8 sm:py-12">
@@ -155,16 +159,19 @@ function Index() {
                     min={0}
                     max={subject.maxScore}
                     inputMode="numeric"
-                    placeholder="0"
-                    value={values[subject.key]}
-                    onChange={(e) =>
+                    placeholder=""
+                    value={raw[subject.key] ?? ""}
+                    onChange={(e) => {
+                      const next = e.target.value;
+                      setRaw((prev) => ({ ...prev, [subject.key]: next }));
                       handleChange(
                         subject.key,
-                        e.target.value === "" ? 0 : e.target.valueAsNumber,
-                      )
-                    }
+                        next === "" ? 0 : e.target.valueAsNumber,
+                      );
+                    }}
                     className="h-12 rounded-lg border-border/60 bg-secondary/20 text-center text-xl font-bold tabular-nums"
                   />
+
                   {errors[subject.key] && (
                     <p className="mt-2 text-xs font-medium text-destructive">
                       {errors[subject.key]}
@@ -211,7 +218,7 @@ function Index() {
                     max={100}
                     step={0.01}
                     inputMode="decimal"
-                    placeholder="0"
+                    placeholder=""
                     value={values.essay ?? ""}
                     onChange={(e) =>
                       handleChange(
