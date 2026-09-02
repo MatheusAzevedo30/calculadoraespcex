@@ -242,7 +242,7 @@ function Index() {
                 type="button"
                 variant="outline"
                 onClick={handleReset}
-                className="h-12 gap-2 text-base font-semibold"
+                className="h-13 gap-2 rounded-xl border-border/70 bg-card text-base font-semibold"
               >
                 <RotateCcw className="h-5 w-5" />
                 Limpar
