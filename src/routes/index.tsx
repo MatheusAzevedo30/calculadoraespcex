@@ -126,9 +126,9 @@ function Index() {
         </header>
 
         {/* Form Card */}
-        <Card className="border-2 border-border/50 shadow-sm">
-          <CardHeader className="border-b border-border/50 bg-secondary/30">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+        <Card className="overflow-hidden rounded-2xl border border-border/60 bg-card/90 shadow-[var(--shadow-elevated)] backdrop-blur">
+          <CardHeader className="border-b border-border/60 bg-[image:var(--gradient-panel)]">
+            <CardTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-[0.12em] text-foreground">
               <Target className="h-5 w-5 text-accent" />
               Notas por disciplina
             </CardTitle>
