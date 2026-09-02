@@ -218,7 +218,7 @@ function Index() {
                     max={100}
                     step={0.01}
                     inputMode="decimal"
-                    placeholder="0"
+                    placeholder=""
                     value={values.essay ?? ""}
                     onChange={(e) =>
                       handleChange(
