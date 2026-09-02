@@ -170,9 +170,9 @@ function Index() {
                       {errors[subject.key]}
                     </p>
                   )}
-                  <div className="mt-2 flex items-center justify-between text-xs">
+                  <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-2 text-xs">
                     <span className="text-muted-foreground">0 a {subject.maxScore} questões</span>
-                    <span className="font-bold tabular-nums text-primary">
+                    <span className="rounded-md bg-accent/15 px-2 py-0.5 font-bold tabular-nums text-foreground">
                       {subjectCodes[subject.key]}{" "}
                       {Number.isFinite(values[subject.key] as number)
                         ? convertToHundred(Number(values[subject.key]) || 0, subject.key).toFixed(2)
