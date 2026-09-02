@@ -170,9 +170,15 @@ function Index() {
                       {errors[subject.key]}
                     </p>
                   )}
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    0 a {subject.maxScore} questões (contribuição máxima: 100 pts)
-                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">0 a {subject.maxScore} questões</span>
+                    <span className="font-bold tabular-nums text-primary">
+                      {subjectCodes[subject.key]}{" "}
+                      {Number.isFinite(values[subject.key] as number)
+                        ? convertToHundred(Number(values[subject.key]) || 0, subject.key).toFixed(2)
+                        : "0.00"}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>
