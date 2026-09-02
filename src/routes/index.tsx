@@ -127,6 +127,23 @@ function Index() {
               </p>
             </div>
           </div>
+          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-card p-1">
+            <Palette className="ml-2 h-4 w-4 text-muted-foreground" />
+            {palettes.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setPalette(p.id)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                  palette === p.id
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
         </header>
 
         {/* Form Card */}
