@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Target, Crosshair, RotateCcw, Calculator } from "lucide-react";
+import { Target, RotateCcw, Calculator } from "lucide-react";
 
+import brasaoAsset from "@/assets/brasao.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { calculateResult, subjects } from "@/lib/calculator";
 import { calculatorSchema } from "@/lib/calculator.schema";
 import type { CalculatorInput } from "@/lib/calculator.schema";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
