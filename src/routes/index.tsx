@@ -205,7 +205,7 @@ function Index() {
               </div>
             </div>
 
-            {result && (
+            {result !== null && (
               <div className="mt-8 rounded-xl border bg-primary/5 p-6 text-center transition-all">
                 <p className="text-sm font-medium text-muted-foreground">Resultado</p>
                 <p className="mt-1 text-5xl font-bold tracking-tight text-foreground">
