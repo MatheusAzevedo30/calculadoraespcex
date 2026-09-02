@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Target, Crosshair, RotateCcw, Calculator } from "lucide-react";
+import { Target, RotateCcw, Calculator } from "lucide-react";
 
+import brasaoAsset from "@/assets/brasao.png.asset.json";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { calculateResult, subjects } from "@/lib/calculator";
 import { calculatorSchema } from "@/lib/calculator.schema";
 import type { CalculatorInput } from "@/lib/calculator.schema";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -88,9 +90,14 @@ function Index() {
         {/* Header */}
         <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-              <Crosshair className="h-7 w-7" strokeWidth={2} />
-            </div>
+            <img
+              src={brasaoAsset.url}
+              alt="Brasão EsPCEx"
+              className="h-16 w-auto drop-shadow-sm"
+              width={64}
+              height={64}
+              loading="eager"
+            />
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 Tiro Certo EsPCEx
