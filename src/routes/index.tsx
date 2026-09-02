@@ -184,7 +184,7 @@ function Index() {
             </div>
 
             {/* Essay toggle */}
-            <div className="rounded-lg border border-border/60 bg-card p-4">
+            <div className="rounded-xl border border-border/60 bg-secondary/20 p-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="essay-toggle" className="text-base font-semibold text-foreground">
