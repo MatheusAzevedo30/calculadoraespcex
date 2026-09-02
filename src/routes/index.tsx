@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Target, RotateCcw, Calculator, Palette } from "lucide-react";
+import { Target, RotateCcw, Calculator } from "lucide-react";
 
 import brasaoAsset from "@/assets/brasao.png.asset.json";
 import { Button } from "@/components/ui/button";
@@ -61,13 +61,7 @@ const subjectCodes: Record<string, string> = {
   english: "NI",
 };
 
-const palettes = [
-  { id: "areia", label: "Areia", className: "" },
-  { id: "oliva", label: "Verde-oliva", className: "olive" },
-] as const;
-
 function Index() {
-  const [palette, setPalette] = useState<(typeof palettes)[number]["id"]>("areia");
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
@@ -101,55 +95,40 @@ function Index() {
   };
 
   return (
-    <div
-      className={`min-h-screen bg-background px-4 py-6 sm:py-10 ${
-        palettes.find((p) => p.id === palette)?.className ?? ""
-      }`}
-    >
-      <div className="mx-auto w-full max-w-4xl">
+    <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8 sm:py-12">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[image:var(--gradient-hero)]"
+      />
+      <div className="relative mx-auto w-full max-w-4xl">
         {/* Header */}
-        <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
-          <div className="flex items-center gap-3">
-            <img
-              src={brasaoAsset.url}
-              alt="Brasão EsPCEx"
-              className="h-16 w-auto drop-shadow-sm"
-              width={64}
-              height={64}
-              loading="eager"
-            />
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        <header className="mb-8 flex flex-col items-center gap-4 text-center">
+          <div className="flex items-center gap-4">
+            <span className="flex h-20 w-20 items-center justify-center rounded-2xl bg-card/80 shadow-[var(--shadow-soft)] ring-1 ring-border/60 backdrop-blur">
+              <img
+                src={brasaoAsset.url}
+                alt="Brasão EsPCEx"
+                className="h-14 w-auto drop-shadow-sm"
+                width={56}
+                height={56}
+                loading="eager"
+              />
+            </span>
+            <div className="text-left">
+              <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl">
                 Tiro Certo EsPCEx
               </h1>
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Calcule sua média EsPCEx
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-card p-1">
-            <Palette className="ml-2 h-4 w-4 text-muted-foreground" />
-            {palettes.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setPalette(p.id)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                  palette === p.id
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
         </header>
 
         {/* Form Card */}
-        <Card className="border-2 border-border/50 shadow-sm">
-          <CardHeader className="border-b border-border/50 bg-secondary/30">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+        <Card className="overflow-hidden rounded-2xl border border-border/60 bg-card/90 shadow-[var(--shadow-elevated)] backdrop-blur">
+          <CardHeader className="border-b border-border/60 bg-[image:var(--gradient-panel)]">
+            <CardTitle className="flex items-center gap-2 text-base font-bold uppercase tracking-[0.12em] text-foreground">
               <Target className="h-5 w-5 text-accent" />
               Notas por disciplina
             </CardTitle>
@@ -160,7 +139,7 @@ function Index() {
               {subjects.map((subject) => (
                 <div
                   key={subject.key}
-                  className="rounded-lg border border-border/60 bg-card p-4 transition-colors focus-within:border-ring/50 focus-within:ring-1 focus-within:ring-ring/30"
+                  className="group rounded-xl border border-border/60 bg-card p-4 shadow-[var(--shadow-soft)] transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 focus-within:border-ring/60 focus-within:ring-2 focus-within:ring-ring/25"
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <Label htmlFor={subject.key} className="font-semibold text-foreground">
@@ -184,16 +163,16 @@ function Index() {
                         e.target.value === "" ? 0 : e.target.valueAsNumber,
                       )
                     }
-                    className="h-11 text-center text-lg font-semibold tabular-nums"
+                    className="h-12 rounded-lg border-border/60 bg-secondary/20 text-center text-xl font-bold tabular-nums"
                   />
                   {errors[subject.key] && (
                     <p className="mt-2 text-xs font-medium text-destructive">
                       {errors[subject.key]}
                     </p>
                   )}
-                  <div className="mt-2 flex items-center justify-between text-xs">
+                  <div className="mt-3 flex items-center justify-between border-t border-border/50 pt-2 text-xs">
                     <span className="text-muted-foreground">0 a {subject.maxScore} questões</span>
-                    <span className="font-bold tabular-nums text-primary">
+                    <span className="rounded-md bg-accent/15 px-2 py-0.5 font-bold tabular-nums text-foreground">
                       {subjectCodes[subject.key]}{" "}
                       {Number.isFinite(values[subject.key] as number)
                         ? convertToHundred(Number(values[subject.key]) || 0, subject.key).toFixed(2)
@@ -205,7 +184,7 @@ function Index() {
             </div>
 
             {/* Essay toggle */}
-            <div className="rounded-lg border border-border/60 bg-card p-4">
+            <div className="rounded-xl border border-border/60 bg-secondary/20 p-5">
               <div className="flex items-center justify-between gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="essay-toggle" className="text-base font-semibold text-foreground">
@@ -254,7 +233,7 @@ function Index() {
               <Button
                 type="button"
                 onClick={handleCalculate}
-                className="h-12 flex-1 gap-2 bg-accent text-lg font-bold text-accent-foreground hover:bg-accent/90"
+                className="h-13 flex-1 gap-2 rounded-xl bg-[image:var(--gradient-accent)] text-lg font-bold uppercase tracking-wide text-accent-foreground shadow-[var(--shadow-soft)] transition-transform hover:brightness-105 active:scale-[0.99]"
               >
                 <Calculator className="h-5 w-5" />
                 Calcular média
@@ -263,7 +242,7 @@ function Index() {
                 type="button"
                 variant="outline"
                 onClick={handleReset}
-                className="h-12 gap-2 text-base font-semibold"
+                className="h-13 gap-2 rounded-xl border-border/70 bg-card text-base font-semibold"
               >
                 <RotateCcw className="h-5 w-5" />
                 Limpar
@@ -274,15 +253,17 @@ function Index() {
 
         {/* Result */}
         {result !== null && (
-          <div className="mt-6 rounded-xl border-2 border-accent/40 bg-card p-6 text-center shadow-sm">
-            <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="mt-6 rounded-2xl border border-accent/30 bg-[image:var(--gradient-panel)] p-8 text-center shadow-[var(--shadow-elevated)]">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-muted-foreground">
               Resultado final
             </p>
-            <p className="mt-2 text-6xl font-extrabold tracking-tight text-foreground tabular-nums">
+            <p className="mt-3 text-6xl font-black tracking-tight text-foreground tabular-nums sm:text-7xl">
               {result.value.toFixed(2)}
             </p>
-            <p className="mt-2 text-2xl font-bold text-accent">{result.type}</p>
-            <p className="mt-1 text-sm font-medium text-muted-foreground">
+            <span className="mt-3 inline-block rounded-full bg-accent/20 px-4 py-1 text-lg font-bold tracking-wide text-foreground">
+              {result.type}
+            </span>
+            <p className="mt-2 text-sm font-medium text-muted-foreground">
               {result.type === "NPEI"
                 ? "Média final sem redação"
                 : "Média final incluindo redação"}
