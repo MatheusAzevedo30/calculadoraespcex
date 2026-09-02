@@ -61,13 +61,7 @@ const subjectCodes: Record<string, string> = {
   english: "NI",
 };
 
-const palettes = [
-  { id: "areia", label: "Areia", className: "" },
-  { id: "oliva", label: "Verde-oliva", className: "olive" },
-] as const;
-
 function Index() {
-  const [palette, setPalette] = useState<(typeof palettes)[number]["id"]>("areia");
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
