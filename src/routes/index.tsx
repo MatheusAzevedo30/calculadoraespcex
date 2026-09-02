@@ -63,6 +63,7 @@ const subjectCodes: Record<string, string> = {
 
 function Index() {
   const [values, setValues] = useState<CalculatorInput>(defaultValues);
+  const [raw, setRaw] = useState<Record<string, string>>({});
   const [errors, setErrors] = useState<Partial<Record<keyof CalculatorInput, string>>>({});
   const [result, setResult] = useState<{ type: "NPEI" | "NFEI"; value: number } | null>(null);
 
@@ -72,6 +73,7 @@ function Index() {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
+
 
   const handleCalculate = () => {
     const parsed = calculatorSchema.safeParse(values);
