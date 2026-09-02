@@ -65,6 +65,7 @@ function Index() {
   const includeEssay = useWatch({ control: form.control, name: "includeEssay" });
 
   function onSubmit(data: CalculatorInput) {
+    console.log("form submitted", data);
     setResult(calculateResult(data));
   }
 
