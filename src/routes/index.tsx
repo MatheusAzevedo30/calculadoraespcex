@@ -233,7 +233,7 @@ function Index() {
               <Button
                 type="button"
                 onClick={handleCalculate}
-                className="h-12 flex-1 gap-2 bg-accent text-lg font-bold text-accent-foreground hover:bg-accent/90"
+                className="h-13 flex-1 gap-2 rounded-xl bg-[image:var(--gradient-accent)] text-lg font-bold uppercase tracking-wide text-accent-foreground shadow-[var(--shadow-soft)] transition-transform hover:brightness-105 active:scale-[0.99]"
               >
                 <Calculator className="h-5 w-5" />
                 Calcular média
