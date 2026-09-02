@@ -95,48 +95,33 @@ function Index() {
   };
 
   return (
-    <div
-      className={`min-h-screen bg-background px-4 py-6 sm:py-10 ${
-        palettes.find((p) => p.id === palette)?.className ?? ""
-      }`}
-    >
-      <div className="mx-auto w-full max-w-4xl">
+    <div className="relative min-h-screen overflow-hidden bg-background px-4 py-8 sm:py-12">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[image:var(--gradient-hero)]"
+      />
+      <div className="relative mx-auto w-full max-w-4xl">
         {/* Header */}
-        <header className="mb-6 flex flex-col items-center gap-3 text-center sm:mb-8">
-          <div className="flex items-center gap-3">
-            <img
-              src={brasaoAsset.url}
-              alt="Brasão EsPCEx"
-              className="h-16 w-auto drop-shadow-sm"
-              width={64}
-              height={64}
-              loading="eager"
-            />
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        <header className="mb-8 flex flex-col items-center gap-4 text-center">
+          <div className="flex items-center gap-4">
+            <span className="flex h-20 w-20 items-center justify-center rounded-2xl bg-card/80 shadow-[var(--shadow-soft)] ring-1 ring-border/60 backdrop-blur">
+              <img
+                src={brasaoAsset.url}
+                alt="Brasão EsPCEx"
+                className="h-14 w-auto drop-shadow-sm"
+                width={56}
+                height={56}
+                loading="eager"
+              />
+            </span>
+            <div className="text-left">
+              <h1 className="text-3xl font-black tracking-tight text-foreground sm:text-4xl">
                 Tiro Certo EsPCEx
               </h1>
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 Calcule sua média EsPCEx
               </p>
             </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-full border border-border/60 bg-card p-1">
-            <Palette className="ml-2 h-4 w-4 text-muted-foreground" />
-            {palettes.map((p) => (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => setPalette(p.id)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
-                  palette === p.id
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
           </div>
         </header>
 
